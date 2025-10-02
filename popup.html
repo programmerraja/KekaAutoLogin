@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Office Hours Tracker</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
+
+    #status {
+      text-align: right;
+      color: red;
+    }
+
+    .circle {
+      width: 10px;
+      height: 10px;
+      display: inline-block;
+      background-color: green;
+      border-radius: 50%;
+      margin: 0 0.2rem;
+    }
+
+    .container {
+      width: 293px;
+      margin: 10px;
+      padding: 20px;
+      background-color: #fff;
+      border: 1px solid #ddd;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      border-radius: 10px;
+    }
+
+    .form {
+      width: 97%;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+      display: flex;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: bold;
+      flex: 1;
+    }
+
+    input[type="time"],
+    input[type="number"] {
+      width: 94%;
+      height: 15px;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      flex: 1;
+    }
+
+    button[type="submit"] {
+      background-color: #4caf50;
+      color: #fff;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    button[type="submit"]:hover {
+      background-color: #3e8e41;
+    }
+
+    /* input {
+        transition: all 0.3s ease-in-out;
+      }
+
+      input:hover {
+        transform: scale(1.05);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      }
+
+      input:focus-within {
+        transform: scale(1.1);
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+      } */
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div id="status"></div>
+    <h1>KekaBuddy</h1>
+    <div class="form">
+      <div class="input-group">
+        <label for="office-in-time">Office In Time:</label>
+        <input type="time" id="office-in-time" name="office-in-time" required />
+      </div>
+      <div class="input-group">
+        <label for="office-out-time">Office Out Time:</label>
+        <input type="time" id="office-out-time" name="office-out-time" required />
+      </div>
+      <div class="input-group">
+        <label for="effective-working-hours">Effective Working Hours:</label>
+        <input type="number" id="effective-working-hours" name="effective-working-hours" required />
+      </div>
+      <button type="submit">Update</button>
+    </div>
+  </div>
+
+  <script src="./popup.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,28 @@
+{
+  "manifest_version": 2,
+  "name": "KekaBuddy",
+  "version": "1.0",
+  "description": "Automatically manage your Keka clock-ins and clock-outs with precision, ensuring you're always on time without the hassle.",
+  "permissions": [
+    "storage",
+    "webRequest",
+    "tabs",
+    "cookies",
+    "debugger",
+    "webNavigation",
+    "activeTab",
+    "alarms"
+  ],
+  "browser_action": {
+    "default_popup": "popup.html"
+  },
+  "background": {
+    "scripts": ["background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://klenty.keka.com/*"],
+      "js": ["./keka.js"]
+    }
+  ]
+}
