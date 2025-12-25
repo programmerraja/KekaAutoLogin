@@ -4,113 +4,385 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Office Hours Tracker</title>
-  <link rel="stylesheet" href="styles.css" />
+  <title>KekaBuddy</title>
   <style>
+    :root {
+      --primary: #818cf8;
+      --primary-hover: #6366f1;
+
+      --bg: #111827;
+      --surface: #1f2937;
+
+      --text: #f9fafb;
+      --text-muted: #9ca3af;
+
+      --border: #374151;
+
+      --success-bg: #064e3b;
+      --success-text: #34d399;
+
+      --danger-bg: #7f1d1d;
+      --danger-text: #f87171;
+
+      --warning-bg: #451a03;
+      --warning-text: #fbbf24;
+    }
+
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f0f0f0;
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      margin: 0;
+      width: 340px;
     }
 
-    #status {
-      text-align: right;
-      color: red;
-    }
-
-    .circle {
-      width: 10px;
-      height: 10px;
-      display: inline-block;
-      background-color: green;
-      border-radius: 50%;
-      margin: 0 0.2rem;
-    }
-
-    .container {
-      width: 293px;
-      margin: 10px;
-      padding: 20px;
-      background-color: #fff;
-      border: 1px solid #ddd;
-      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-      border-radius: 10px;
-    }
-
-    .form {
-      width: 97%;
-    }
-
-    .input-group {
-      margin-bottom: 20px;
+    .tabs {
       display: flex;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
     }
 
-    label {
-      display: block;
-      margin-bottom: 10px;
-      font-weight: bold;
+    .tab-btn {
       flex: 1;
-    }
-
-    input[type="time"],
-    input[type="number"] {
-      width: 94%;
-      height: 15px;
-      padding: 10px;
-      font-size: 16px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      flex: 1;
-    }
-
-    button[type="submit"] {
-      background-color: #4caf50;
-      color: #fff;
-      padding: 10px 20px;
+      padding: 12px;
       border: none;
-      border-radius: 5px;
+      background: none;
+      font-weight: 600;
+      color: var(--text-muted);
+      cursor: pointer;
+      position: relative;
+      transition: color 0.2s;
+    }
+
+    .tab-btn:hover {
+      color: var(--text);
+    }
+
+    .tab-btn.active {
+      color: var(--primary);
+    }
+
+    .tab-btn.active::after {
+      content: '';
+      position: absolute;
+      bottom: -1px;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      background: var(--primary);
+    }
+
+    .tab-content {
+      display: none;
+      padding: 20px;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .status-card {
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 24px 20px;
+      text-align: center;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+      margin-bottom: 20px;
+      border: 1px solid var(--border);
+    }
+
+    .timer-display {
+      font-size: 2.5rem;
+      font-weight: 700;
+      color: var(--text);
+      font-variant-numeric: tabular-nums;
+      line-height: 1;
+      margin: 15px 0;
+      letter-spacing: -0.025em;
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      background: var(--surface);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    .status-badge.clocked-in {
+      background: var(--success-bg);
+      color: var(--success-text);
+      border: 1px solid var(--success-bg);
+    }
+
+    .status-badge.clocked-out {
+      background: var(--danger-bg);
+      color: var(--danger-text);
+      border: 1px solid var(--danger-bg);
+    }
+
+    .status-badge.holiday {
+      background: var(--warning-bg);
+      color: var(--warning-text);
+      border: 1px solid var(--warning-bg);
+    }
+
+    .holiday-toggle {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--surface);
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin-top: 15px;
+    }
+
+    .holiday-toggle label {
+      color: var(--text);
+      font-weight: 500;
+      font-size: 0.95rem;
+    }
+
+    /* Form Styles */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--text-muted);
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 12px;
+      background-color: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 0.95rem;
+      box-sizing: border-box;
+      transition: all 0.2s;
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 2px rgba(129, 140, 248, 0.2);
+    }
+
+    /* Time Input Icon Fix for Dark Mode */
+    input[type="time"]::-webkit-calendar-picker-indicator {
+      filter: invert(1);
       cursor: pointer;
     }
 
-    button[type="submit"]:hover {
-      background-color: #3e8e41;
+    /* Day Selector Component */
+    .week-selector {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin-top: 8px;
     }
 
-    /* input {
-        transition: all 0.3s ease-in-out;
-      }
+    .day-btn {
+      width: 36px;
+      height: 36px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: var(--surface);
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      font-weight: 600;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: all 0.2s;
+      user-select: none;
+    }
 
-      input:hover {
-        transform: scale(1.05);
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-      }
+    .day-btn:hover {
+      border-color: var(--primary);
+      color: var(--text);
+    }
 
-      input:focus-within {
-        transform: scale(1.1);
-        box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-      } */
+    .day-btn.selected {
+      background: var(--primary);
+      color: #111827;
+      border-color: var(--primary);
+      box-shadow: 0 0 10px rgba(129, 140, 248, 0.4);
+    }
+
+    .btn-primary {
+      width: 100%;
+      background-color: var(--primary);
+      color: #111827;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+    }
+
+    .btn-primary:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .version-footer {
+      text-align: center;
+      margin-top: 24px;
+      color: var(--text-muted);
+      font-size: 0.75rem;
+    }
+
+    .version-footer a {
+      text-decoration: none;
+      color: var(--primary);
+    }
+
+    /* Switch Component */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 44px;
+      height: 24px;
+    }
+
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #4b5563;
+      transition: .4s;
+      border-radius: 34px;
+    }
+
+    .slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: .4s;
+      border-radius: 50%;
+    }
+
+    input:checked+.slider {
+      background-color: var(--primary);
+    }
+
+    input:checked+.slider:before {
+      transform: translateX(20px);
+    }
   </style>
 </head>
 
 <body>
-  <div class="container">
-    <div id="status"></div>
-    <h1>KekaBuddy</h1>
-    <div class="form">
-      <div class="input-group">
-        <label for="office-in-time">Office In Time:</label>
-        <input type="time" id="office-in-time" name="office-in-time" required />
-      </div>
-      <div class="input-group">
-        <label for="office-out-time">Office Out Time:</label>
-        <input type="time" id="office-out-time" name="office-out-time" required />
-      </div>
-      <div class="input-group">
-        <label for="effective-working-hours">Effective Working Hours:</label>
-        <input type="number" id="effective-working-hours" name="effective-working-hours" required />
-      </div>
-      <button type="submit">Update</button>
+
+  <div class="tabs">
+    <button class="tab-btn active" data-tab="dashboard">Dashboard</button>
+    <button class="tab-btn" data-tab="settings">Settings</button>
+  </div>
+
+  <div id="dashboard" class="tab-content active">
+
+    <div class="status-card">
+      <div id="status-badge" class="status-badge">Syncing...</div>
+      <div id="timer" class="timer-display">--:--</div>
+      <div id="last-sync" style="font-size: 0.75rem; color: var(--text-muted);">Last sync: --</div>
     </div>
+
+    <div class="holiday-toggle">
+      <label for="mark-holiday">Mark Today as Leave/Holiday</label>
+      <label class="switch">
+        <input type="checkbox" id="mark-holiday">
+        <span class="slider"></span>
+      </label>
+    </div>
+
+  </div>
+
+  <div id="settings" class="tab-content">
+    <form id="config-form">
+
+      <div class="form-group">
+        <label>Keka URL</label>
+        <input type="url" id="keka-url" class="form-control" placeholder="https://company.keka.com" required>
+      </div>
+
+      <div class="form-group" style="display: flex; gap: 12px;">
+        <div style="flex: 1;">
+          <label>Office In</label>
+          <input type="time" id="office-in-time" class="form-control" required>
+        </div>
+        <div style="flex: 1;">
+          <label>Office Out</label>
+          <input type="time" id="office-out-time" class="form-control" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Target Work Quantity (Hours)</label>
+        <input type="number" id="effective-working-hours" class="form-control" placeholder="9" step="0.5" required>
+      </div>
+
+      <div class="form-group">
+        <label>Auto-Sync Interval (Minutes)</label>
+        <select id="sync-interval" class="form-control">
+          <option value="5">Every 5 Minutes (Aggressive)</option>
+          <option value="15" selected>Every 15 Minutes (Recommended)</option>
+          <option value="30">Every 30 Minutes</option>
+          <option value="60">Every 1 Hour</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>Weekly Off Days (Repeating)</label>
+        <div class="week-selector">
+          <div class="day-btn" data-day="0">S</div>
+          <div class="day-btn" data-day="1">M</div>
+          <div class="day-btn" data-day="2">T</div>
+          <div class="day-btn" data-day="3">W</div>
+          <div class="day-btn" data-day="4">T</div>
+          <div class="day-btn" data-day="5">F</div>
+          <div class="day-btn" data-day="6">S</div>
+        </div>
+        <div style="font-size: 0.7rem; color: var(--text-muted); margin-top: 5px;">Select days to skip automation
+        </div>
+      </div>
+
+      <button type="submit" class="btn-primary">Save Settings</button>
+
+      <div class="version-footer">
+        KekaBuddy v1.3.2 (Dark)
+      </div>
+    </form>
   </div>
 
   <script src="./popup.js"></script>
