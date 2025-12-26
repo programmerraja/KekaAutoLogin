@@ -64,7 +64,11 @@ async function clkIn(type) {
   }
 }
 
-const type = new URLSearchParams(window.location.search).get("type");
+let type = new URLSearchParams(window.location.search).get("type");
+// Fallback to hash if not found in query params
+if(!type){
+  type = window.location.hash.split("type=")[1];
+}
 
 if (type === "CLK_IN" || type === "CLK_OUT") {
   console.log(`[KekaAuto] Starting automation for: ${type}`);
